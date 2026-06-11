@@ -1,0 +1,89 @@
+{
+  "skill_name": "java-clean-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Cria um microsserviço `loan-service` para o pacote `br.com.itau.loan` com Spring Boot e Clean Architecture. O serviço gerencia empréstimos (`Loan`) com as operações: solicitar empréstimo, aprovar e cancelar. Use PostgreSQL.",
+      "expected_output": "Estrutura completa com camadas domain/application/infrastructure/presentation separadas, Loan em Java puro sem anotações Spring/JPA, LoanRepository como interface em domain/, LoanJpaEntity com @Entity em infrastructure/persistence/, use cases separados por operação, EntityMapper, RepositoryImpl, Controller injetando use case.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "domain_no_spring_jpa",
+          "text": "O domain object Loan.java não contém anotações @Entity, @Service, @Component, nem imports de org.springframework ou jakarta.persistence"
+        },
+        {
+          "id": "repository_is_interface",
+          "text": "LoanRepository em domain/ é declarada como interface (não classe concreta ou abstract class)"
+        },
+        {
+          "id": "jpa_entity_in_infra",
+          "text": "LoanJpaEntity.java com anotação @Entity existe em infrastructure/persistence/ (não em domain/)"
+        },
+        {
+          "id": "three_separate_use_cases",
+          "text": "Existem pelo menos 3 use cases distintos cobrindo solicitar, aprovar e cancelar — não um único serviço genérico com múltiplos métodos"
+        },
+        {
+          "id": "entity_mapper_present",
+          "text": "LoanEntityMapper.java existe em infrastructure/persistence/ com métodos de conversão em ambas as direções (toJpaEntity e toDomain)"
+        },
+        {
+          "id": "controller_injects_usecase",
+          "text": "O controller injeta UseCase via construtor e não referencia Repository diretamente"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Temos um microsserviço `br.com.itau.payment` onde o `PaymentController` injeta `PaymentRepository` diretamente, e a classe `Payment` tem `@Entity @Table(name='payment')` no pacote `domain/`. Quais são as violações de Clean Architecture e como corrigi-las?",
+      "expected_output": "Identificação de violações críticas: (1) @Entity no domain object — P3, solução: PaymentJpaEntity em infrastructure/persistence; (2) Repository no controller — P7, solução: controller injeta UseCase. Código before/after para cada correção.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "identifies_entity_in_domain",
+          "text": "Identifica @Entity (ou @Table) no domain object como violação — aponta que deve ser movido para infrastructure/persistence/"
+        },
+        {
+          "id": "identifies_repo_in_controller",
+          "text": "Identifica injeção direta de PaymentRepository no controller como violação — aponta que controller deve injetar UseCase"
+        },
+        {
+          "id": "correct_fix_jpa_entity",
+          "text": "Propõe criar PaymentJpaEntity em infrastructure/persistence/ e manter Payment em domain/ como Java puro"
+        },
+        {
+          "id": "correct_fix_controller",
+          "text": "Propõe um PaymentUseCase ou similar que o controller deve injetar em vez do repository"
+        },
+        {
+          "id": "principle_numbers_or_names_cited",
+          "text": "Cita ao menos um princípio de forma explícita (ex: P3, P7, 'separação JPA', 'controller fino', 'pureza do domínio', ou equivalente)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "No microsserviço `account-service` (`br.com.itau.account`) já temos o aggregate `Account`. Preciso adicionar um novo aggregate `CreditLimit` com as operações de definir limite e consultar limite atual. Como ficaria a estrutura?",
+      "expected_output": "Estrutura para CreditLimit em pasta própria: domain/creditlimit/, application/usecase/creditlimit/, infrastructure/persistence/creditlimit/, presentation/rest/creditlimit/. Nota sobre não importar Account diretamente.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "creditlimit_own_folder",
+          "text": "CreditLimit fica em pasta própria (domain/creditlimit/ ou equivalente) separado de domain/account/"
+        },
+        {
+          "id": "two_separate_use_cases",
+          "text": "Existem use cases separados para definir limite (SetCreditLimitUseCase ou similar) e consultar limite (GetCreditLimitUseCase ou similar)"
+        },
+        {
+          "id": "no_cross_aggregate_import",
+          "text": "Menciona explicitamente que CreditLimit não deve importar o domain object Account, referenciando AccountId (ou similar) por valor se necessário"
+        },
+        {
+          "id": "full_layer_coverage",
+          "text": "Gera ou menciona arquivos em todas as 4 camadas: domain, application, infrastructure/persistence, presentation/rest"
+        }
+      ]
+    }
+  ]
+}

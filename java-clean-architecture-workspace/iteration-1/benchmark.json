@@ -1,0 +1,323 @@
+{
+  "metadata": {
+    "skill_name": "java-clean-architecture",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-06-11T02:49:05Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "O domain object Loan.java n\u00e3o cont\u00e9m anota\u00e7\u00f5es @Entity, @Service, @Component, nem imports de org.springframework ou jakarta.persistence",
+          "passed": true,
+          "evidence": "domain/loan/Loan.java gerado sem nenhuma anota\u00e7\u00e3o Spring ou JPA. Coment\u00e1rio expl\u00edcito '// Java puro \u2014 sem @Entity, sem @Service, sem imports Spring/JPA'. Apenas imports Java puro (BigDecimal, LocalDateTime)."
+        },
+        {
+          "text": "LoanRepository em domain/ \u00e9 declarada como interface (n\u00e3o classe concreta ou abstract class)",
+          "passed": true,
+          "evidence": "domain/loan/LoanRepository.java declarada como 'public interface LoanRepository' com m\u00e9todos save, findById e findByCustomerId \u2014 nenhuma implementa\u00e7\u00e3o."
+        },
+        {
+          "text": "LoanJpaEntity.java com anota\u00e7\u00e3o @Entity existe em infrastructure/persistence/ (n\u00e3o em domain/)",
+          "passed": true,
+          "evidence": "infrastructure/persistence/loan/LoanJpaEntity.java com @Entity @Table(name = 'loan_loan'). Domain object Loan.java n\u00e3o tem @Entity."
+        },
+        {
+          "text": "Existem pelo menos 3 use cases distintos cobrindo solicitar, aprovar e cancelar \u2014 n\u00e3o um \u00fanico servi\u00e7o gen\u00e9rico com m\u00faltiplos m\u00e9todos",
+          "passed": true,
+          "evidence": "RequestLoanUseCase + RequestLoanUseCaseImpl, ApproveLoanUseCase + ApproveLoanUseCaseImpl, CancelLoanUseCase + CancelLoanUseCaseImpl \u2014 3 pares de interface+implementa\u00e7\u00e3o distintos."
+        },
+        {
+          "text": "LoanEntityMapper.java existe em infrastructure/persistence/ com m\u00e9todos de convers\u00e3o em ambas as dire\u00e7\u00f5es (toJpaEntity e toDomain)",
+          "passed": true,
+          "evidence": "LoanEntityMapper.java com m\u00e9todos toJpaEntity(Loan) e toDomain(LoanJpaEntity) explicitamente declarados."
+        },
+        {
+          "text": "O controller injeta UseCase via construtor e n\u00e3o referencia Repository diretamente",
+          "passed": true,
+          "evidence": "LoanController injeta RequestLoanUseCase, ApproveLoanUseCase e CancelLoanUseCase via construtor. Nenhuma refer\u00eancia a LoanRepository ou LoanJpaRepository."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifica @Entity (ou @Table) no domain object como viola\u00e7\u00e3o \u2014 aponta que deve ser movido para infrastructure/persistence/",
+          "passed": true,
+          "evidence": "V1 e V3 explicitamente identificados: '@Entity @Table em domain/ \u2014 P2 + P3 CR\u00cdTICO'. Solu\u00e7\u00e3o: mover para 'infrastructure/persistence/payment/PaymentJpaEntity.java'."
+        },
+        {
+          "text": "Identifica inje\u00e7\u00e3o direta de PaymentRepository no controller como viola\u00e7\u00e3o \u2014 aponta que controller deve injetar UseCase",
+          "passed": true,
+          "evidence": "V2 identificado: 'PaymentController injeta PaymentRepository diretamente \u2014 P1 + P7 CR\u00cdTICO'. Solu\u00e7\u00e3o clara com c\u00f3digo before/after mostrando controller injetando CreatePaymentUseCase."
+        },
+        {
+          "text": "Prop\u00f5e criar PaymentJpaEntity em infrastructure/persistence/ e manter Payment em domain/ como Java puro",
+          "passed": true,
+          "evidence": "C\u00f3digo before/after completo: Payment.java como Java puro + PaymentJpaEntity.java com @Entity em infrastructure/persistence/payment/."
+        },
+        {
+          "text": "Prop\u00f5e um PaymentUseCase ou similar que o controller deve injetar em vez do repository",
+          "passed": true,
+          "evidence": "CreatePaymentUseCase interface + CreatePaymentUseCaseImpl gerados com c\u00f3digo completo. Controller refatorado para injetar CreatePaymentUseCase."
+        },
+        {
+          "text": "Cita ao menos um princ\u00edpio de forma expl\u00edcita (ex: P3, P7, 'separa\u00e7\u00e3o JPA', 'controller fino', 'pureza do dom\u00ednio', ou equivalente)",
+          "passed": true,
+          "evidence": "7 viola\u00e7\u00f5es com n\u00fameros de princ\u00edpio expl\u00edcitos: P1, P2, P3, P4, P5, P6, P7 todos referenciados na tabela de viola\u00e7\u00f5es."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "CreditLimit fica em pasta pr\u00f3pria (domain/creditlimit/ ou equivalente) separado de domain/account/",
+          "passed": true,
+          "evidence": "domain/creditlimit/ criado com CreditLimit.java, CreditLimitRepository.java e CreditLimitException.java \u2014 completamente separado de domain/account/."
+        },
+        {
+          "text": "Existem use cases separados para definir limite (SetCreditLimitUseCase ou similar) e consultar limite (GetCreditLimitUseCase ou similar)",
+          "passed": true,
+          "evidence": "SetCreditLimitUseCase + SetCreditLimitUseCaseImpl e GetCreditLimitUseCase + GetCreditLimitUseCaseImpl \u2014 2 pares de interface+implementa\u00e7\u00e3o separados com c\u00f3digo completo."
+        },
+        {
+          "text": "Menciona explicitamente que CreditLimit n\u00e3o deve importar o domain object Account, referenciando AccountId (ou similar) por valor se necess\u00e1rio",
+          "passed": true,
+          "evidence": "Se\u00e7\u00e3o 3 expl\u00edcita: 'CreditLimit N\u00c3O referencia o aggregate Account diretamente. Armazena apenas UUID accountId.' Explica DDD aggregate reference-by-id. Tabela com 'O que N\u00c3O fazer'."
+        },
+        {
+          "text": "Gera ou menciona arquivos em todas as 4 camadas: domain, application, infrastructure/persistence, presentation/rest",
+          "passed": true,
+          "evidence": "16 arquivos novos em todas as 4 camadas com c\u00f3digo completo."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "O domain object Loan.java n\u00e3o cont\u00e9m anota\u00e7\u00f5es @Entity, @Service, @Component, nem imports de org.springframework ou jakarta.persistence",
+          "passed": true,
+          "evidence": "O baseline descreve Loan como 'pure Java (no Spring/JPA)'. N\u00e3o h\u00e1 anota\u00e7\u00f5es no domain object conforme descrito."
+        },
+        {
+          "text": "LoanRepository em domain/ \u00e9 declarada como interface (n\u00e3o classe concreta ou abstract class)",
+          "passed": true,
+          "evidence": "LoanRepository colocada em 'application/port/out/' como interface \u2014 ainda \u00e9 interface, mas na camada errada (fora de domain/). Estrutura hexagonal vs camadas expl\u00edcitas."
+        },
+        {
+          "text": "LoanJpaEntity.java com anota\u00e7\u00e3o @Entity existe em infrastructure/persistence/ (n\u00e3o em domain/)",
+          "passed": true,
+          "evidence": "LoanJpaEntity.java colocado em 'infrastructure/persistence/entity/' com @Entity conforme descrito."
+        },
+        {
+          "text": "Existem pelo menos 3 use cases distintos cobrindo solicitar, aprovar e cancelar \u2014 n\u00e3o um \u00fanico servi\u00e7o gen\u00e9rico com m\u00faltiplos m\u00e9todos",
+          "passed": true,
+          "evidence": "RequestLoanUseCase, ApproveLoanUseCase e CancelLoanUseCase listados como interfaces separadas em 'application/port/in/'."
+        },
+        {
+          "text": "LoanEntityMapper.java existe em infrastructure/persistence/ com m\u00e9todos de convers\u00e3o em ambas as dire\u00e7\u00f5es (toJpaEntity e toDomain)",
+          "passed": true,
+          "evidence": "LoanMapper.java listado em 'infrastructure/persistence/mapper/' \u2014 convers\u00e3o em ambas as dire\u00e7\u00f5es mencionada."
+        },
+        {
+          "text": "O controller injeta UseCase via construtor e n\u00e3o referencia Repository diretamente",
+          "passed": true,
+          "evidence": "'LoanController depends only on inbound-port interfaces, never on use-case implementations directly' \u2014 conforme descrito."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifica @Entity (ou @Table) no domain object como viola\u00e7\u00e3o \u2014 aponta que deve ser movido para infrastructure/persistence/",
+          "passed": true,
+          "evidence": "Violation 1 identificado: '@Entity/@Table on a domain class \u2014 breaking the Dependency Rule'. Solu\u00e7\u00e3o: PaymentJpaEntity em infrastructure/persistence/."
+        },
+        {
+          "text": "Identifica inje\u00e7\u00e3o direta de PaymentRepository no controller como viola\u00e7\u00e3o \u2014 aponta que controller deve injetar UseCase",
+          "passed": true,
+          "evidence": "Violation 2 identificado: 'PaymentController injects PaymentRepository directly \u2014 skipping the application/use-case layer'. C\u00f3digo before/after mostra controller injetando CreatePaymentUseCase."
+        },
+        {
+          "text": "Prop\u00f5e criar PaymentJpaEntity em infrastructure/persistence/ e manter Payment em domain/ como Java puro",
+          "passed": true,
+          "evidence": "Fix 1 com c\u00f3digo before/after completo: Payment.java sem JPA + PaymentJpaEntity.java com @Entity em infrastructure/persistence/."
+        },
+        {
+          "text": "Prop\u00f5e um PaymentUseCase ou similar que o controller deve injetar em vez do repository",
+          "passed": true,
+          "evidence": "Fix 4 e Fix 5: CreatePaymentUseCase interface + impl + controller refatorado para injetar o use case."
+        },
+        {
+          "text": "Cita ao menos um princ\u00edpio de forma expl\u00edcita (ex: P3, P7, 'separa\u00e7\u00e3o JPA', 'controller fino', 'pureza do dom\u00ednio', ou equivalente)",
+          "passed": false,
+          "evidence": "O baseline identifica as viola\u00e7\u00f5es corretamente mas n\u00e3o cita n\u00fameros de princ\u00edpio (P1, P3, P7, etc.) nem nomes do framework de compliance. Usa descri\u00e7\u00f5es gen\u00e9ricas sem o esquema de princ\u00edpios numerados."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "CreditLimit fica em pasta pr\u00f3pria (domain/creditlimit/ ou equivalente) separado de domain/account/",
+          "passed": true,
+          "evidence": "domain/creditlimit/ criado separado de domain/account/ na \u00e1rvore de arquivos."
+        },
+        {
+          "text": "Existem use cases separados para definir limite (SetCreditLimitUseCase ou similar) e consultar limite (GetCreditLimitUseCase ou similar)",
+          "passed": true,
+          "evidence": "SetCreditLimitUseCase e GetCreditLimitUseCase listados em application/creditlimit/ separados."
+        },
+        {
+          "text": "Menciona explicitamente que CreditLimit n\u00e3o deve importar o domain object Account, referenciando AccountId (ou similar) por valor se necess\u00e1rio",
+          "passed": true,
+          "evidence": "Se\u00e7\u00e3o 'On CreditLimit referencing Account' explica que CreditLimit armazena apenas UUID accountId e n\u00e3o deve referenciar Account diretamente."
+        },
+        {
+          "text": "Gera ou menciona arquivos em todas as 4 camadas: domain, application, infrastructure/persistence, presentation/rest",
+          "passed": true,
+          "evidence": "\u00c1rvore cobre domain, application, infrastructure e presentation com arquivos nomeados por camada."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.9333,
+        "stddev": 0.1155,
+        "min": 0.8,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.07",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,27 @@
+{
+  "eval_id": 2,
+  "config": "without_skill",
+  "summary": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4},
+  "expectations": [
+    {
+      "text": "CreditLimit fica em pasta própria (domain/creditlimit/ ou equivalente) separado de domain/account/",
+      "passed": true,
+      "evidence": "domain/creditlimit/ criado separado de domain/account/ na árvore de arquivos."
+    },
+    {
+      "text": "Existem use cases separados para definir limite (SetCreditLimitUseCase ou similar) e consultar limite (GetCreditLimitUseCase ou similar)",
+      "passed": true,
+      "evidence": "SetCreditLimitUseCase e GetCreditLimitUseCase listados em application/creditlimit/ separados."
+    },
+    {
+      "text": "Menciona explicitamente que CreditLimit não deve importar o domain object Account, referenciando AccountId (ou similar) por valor se necessário",
+      "passed": true,
+      "evidence": "Seção 'On CreditLimit referencing Account' explica que CreditLimit armazena apenas UUID accountId e não deve referenciar Account diretamente."
+    },
+    {
+      "text": "Gera ou menciona arquivos em todas as 4 camadas: domain, application, infrastructure/persistence, presentation/rest",
+      "passed": true,
+      "evidence": "Árvore cobre domain, application, infrastructure e presentation com arquivos nomeados por camada."
+    }
+  ]
+}

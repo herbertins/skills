@@ -1,0 +1,6 @@
+{
+  "eval_id": 3,
+  "eval_name": "add-aggregate-existing-service",
+  "prompt": "No microsserviço `account-service` (`br.com.itau.account`) já temos o aggregate `Account`. Preciso adicionar um novo aggregate `CreditLimit` com as operações de definir limite e consultar limite atual. Como ficaria a estrutura?",
+  "assertions": []
+}

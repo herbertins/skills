@@ -1,0 +1,32 @@
+{
+  "eval_id": 1,
+  "config": "without_skill",
+  "summary": {"pass_rate": 0.8, "passed": 4, "failed": 1, "total": 5},
+  "expectations": [
+    {
+      "text": "Identifica @Entity (ou @Table) no domain object como violação — aponta que deve ser movido para infrastructure/persistence/",
+      "passed": true,
+      "evidence": "Violation 1 identificado: '@Entity/@Table on a domain class — breaking the Dependency Rule'. Solução: PaymentJpaEntity em infrastructure/persistence/."
+    },
+    {
+      "text": "Identifica injeção direta de PaymentRepository no controller como violação — aponta que controller deve injetar UseCase",
+      "passed": true,
+      "evidence": "Violation 2 identificado: 'PaymentController injects PaymentRepository directly — skipping the application/use-case layer'. Código before/after mostra controller injetando CreatePaymentUseCase."
+    },
+    {
+      "text": "Propõe criar PaymentJpaEntity em infrastructure/persistence/ e manter Payment em domain/ como Java puro",
+      "passed": true,
+      "evidence": "Fix 1 com código before/after completo: Payment.java sem JPA + PaymentJpaEntity.java com @Entity em infrastructure/persistence/."
+    },
+    {
+      "text": "Propõe um PaymentUseCase ou similar que o controller deve injetar em vez do repository",
+      "passed": true,
+      "evidence": "Fix 4 e Fix 5: CreatePaymentUseCase interface + impl + controller refatorado para injetar o use case."
+    },
+    {
+      "text": "Cita ao menos um princípio de forma explícita (ex: P3, P7, 'separação JPA', 'controller fino', 'pureza do domínio', ou equivalente)",
+      "passed": false,
+      "evidence": "O baseline identifica as violações corretamente mas não cita números de princípio (P1, P3, P7, etc.) nem nomes do framework de compliance. Usa descrições genéricas sem o esquema de princípios numerados."
+    }
+  ]
+}

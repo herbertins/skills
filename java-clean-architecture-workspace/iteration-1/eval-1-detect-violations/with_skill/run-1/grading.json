@@ -1,0 +1,32 @@
+{
+  "eval_id": 1,
+  "config": "with_skill",
+  "summary": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5},
+  "expectations": [
+    {
+      "text": "Identifica @Entity (ou @Table) no domain object como violação — aponta que deve ser movido para infrastructure/persistence/",
+      "passed": true,
+      "evidence": "V1 e V3 explicitamente identificados: '@Entity @Table em domain/ — P2 + P3 CRÍTICO'. Solução: mover para 'infrastructure/persistence/payment/PaymentJpaEntity.java'."
+    },
+    {
+      "text": "Identifica injeção direta de PaymentRepository no controller como violação — aponta que controller deve injetar UseCase",
+      "passed": true,
+      "evidence": "V2 identificado: 'PaymentController injeta PaymentRepository diretamente — P1 + P7 CRÍTICO'. Solução clara com código before/after mostrando controller injetando CreatePaymentUseCase."
+    },
+    {
+      "text": "Propõe criar PaymentJpaEntity em infrastructure/persistence/ e manter Payment em domain/ como Java puro",
+      "passed": true,
+      "evidence": "Código before/after completo: Payment.java como Java puro + PaymentJpaEntity.java com @Entity em infrastructure/persistence/payment/."
+    },
+    {
+      "text": "Propõe um PaymentUseCase ou similar que o controller deve injetar em vez do repository",
+      "passed": true,
+      "evidence": "CreatePaymentUseCase interface + CreatePaymentUseCaseImpl gerados com código completo. Controller refatorado para injetar CreatePaymentUseCase."
+    },
+    {
+      "text": "Cita ao menos um princípio de forma explícita (ex: P3, P7, 'separação JPA', 'controller fino', 'pureza do domínio', ou equivalente)",
+      "passed": true,
+      "evidence": "7 violações com números de princípio explícitos: P1, P2, P3, P4, P5, P6, P7 todos referenciados na tabela de violações."
+    }
+  ]
+}

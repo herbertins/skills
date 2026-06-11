@@ -1,0 +1,6 @@
+{
+  "eval_id": 1,
+  "eval_name": "scaffold-new-microservice",
+  "prompt": "Cria um microsserviço `loan-service` para o pacote `br.com.itau.loan` com Spring Boot e Clean Architecture. O serviço gerencia empréstimos (`Loan`) com as operações: solicitar empréstimo, aprovar e cancelar. Use PostgreSQL.",
+  "assertions": []
+}

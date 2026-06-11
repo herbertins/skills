@@ -1,0 +1,37 @@
+{
+  "eval_id": 0,
+  "config": "with_skill",
+  "summary": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6},
+  "expectations": [
+    {
+      "text": "O domain object Loan.java não contém anotações @Entity, @Service, @Component, nem imports de org.springframework ou jakarta.persistence",
+      "passed": true,
+      "evidence": "domain/loan/Loan.java gerado sem nenhuma anotação Spring ou JPA. Comentário explícito '// Java puro — sem @Entity, sem @Service, sem imports Spring/JPA'. Apenas imports Java puro (BigDecimal, LocalDateTime)."
+    },
+    {
+      "text": "LoanRepository em domain/ é declarada como interface (não classe concreta ou abstract class)",
+      "passed": true,
+      "evidence": "domain/loan/LoanRepository.java declarada como 'public interface LoanRepository' com métodos save, findById e findByCustomerId — nenhuma implementação."
+    },
+    {
+      "text": "LoanJpaEntity.java com anotação @Entity existe em infrastructure/persistence/ (não em domain/)",
+      "passed": true,
+      "evidence": "infrastructure/persistence/loan/LoanJpaEntity.java com @Entity @Table(name = 'loan_loan'). Domain object Loan.java não tem @Entity."
+    },
+    {
+      "text": "Existem pelo menos 3 use cases distintos cobrindo solicitar, aprovar e cancelar — não um único serviço genérico com múltiplos métodos",
+      "passed": true,
+      "evidence": "RequestLoanUseCase + RequestLoanUseCaseImpl, ApproveLoanUseCase + ApproveLoanUseCaseImpl, CancelLoanUseCase + CancelLoanUseCaseImpl — 3 pares de interface+implementação distintos."
+    },
+    {
+      "text": "LoanEntityMapper.java existe em infrastructure/persistence/ com métodos de conversão em ambas as direções (toJpaEntity e toDomain)",
+      "passed": true,
+      "evidence": "LoanEntityMapper.java com métodos toJpaEntity(Loan) e toDomain(LoanJpaEntity) explicitamente declarados."
+    },
+    {
+      "text": "O controller injeta UseCase via construtor e não referencia Repository diretamente",
+      "passed": true,
+      "evidence": "LoanController injeta RequestLoanUseCase, ApproveLoanUseCase e CancelLoanUseCase via construtor. Nenhuma referência a LoanRepository ou LoanJpaRepository."
+    }
+  ]
+}

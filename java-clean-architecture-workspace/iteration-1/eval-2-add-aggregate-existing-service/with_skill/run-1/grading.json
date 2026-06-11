@@ -1,0 +1,27 @@
+{
+  "eval_id": 2,
+  "config": "with_skill",
+  "summary": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4},
+  "expectations": [
+    {
+      "text": "CreditLimit fica em pasta própria (domain/creditlimit/ ou equivalente) separado de domain/account/",
+      "passed": true,
+      "evidence": "domain/creditlimit/ criado com CreditLimit.java, CreditLimitRepository.java e CreditLimitException.java — completamente separado de domain/account/."
+    },
+    {
+      "text": "Existem use cases separados para definir limite (SetCreditLimitUseCase ou similar) e consultar limite (GetCreditLimitUseCase ou similar)",
+      "passed": true,
+      "evidence": "SetCreditLimitUseCase + SetCreditLimitUseCaseImpl e GetCreditLimitUseCase + GetCreditLimitUseCaseImpl — 2 pares de interface+implementação separados com código completo."
+    },
+    {
+      "text": "Menciona explicitamente que CreditLimit não deve importar o domain object Account, referenciando AccountId (ou similar) por valor se necessário",
+      "passed": true,
+      "evidence": "Seção 3 explícita: 'CreditLimit NÃO referencia o aggregate Account diretamente. Armazena apenas UUID accountId.' Explica DDD aggregate reference-by-id. Tabela com 'O que NÃO fazer'."
+    },
+    {
+      "text": "Gera ou menciona arquivos em todas as 4 camadas: domain, application, infrastructure/persistence, presentation/rest",
+      "passed": true,
+      "evidence": "16 arquivos novos em todas as 4 camadas com código completo."
+    }
+  ]
+}

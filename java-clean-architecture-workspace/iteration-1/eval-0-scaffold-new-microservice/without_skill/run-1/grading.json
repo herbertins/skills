@@ -1,0 +1,37 @@
+{
+  "eval_id": 0,
+  "config": "without_skill",
+  "summary": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6},
+  "expectations": [
+    {
+      "text": "O domain object Loan.java não contém anotações @Entity, @Service, @Component, nem imports de org.springframework ou jakarta.persistence",
+      "passed": true,
+      "evidence": "O baseline descreve Loan como 'pure Java (no Spring/JPA)'. Não há anotações no domain object conforme descrito."
+    },
+    {
+      "text": "LoanRepository em domain/ é declarada como interface (não classe concreta ou abstract class)",
+      "passed": true,
+      "evidence": "LoanRepository colocada em 'application/port/out/' como interface — ainda é interface, mas na camada errada (fora de domain/). Estrutura hexagonal vs camadas explícitas."
+    },
+    {
+      "text": "LoanJpaEntity.java com anotação @Entity existe em infrastructure/persistence/ (não em domain/)",
+      "passed": true,
+      "evidence": "LoanJpaEntity.java colocado em 'infrastructure/persistence/entity/' com @Entity conforme descrito."
+    },
+    {
+      "text": "Existem pelo menos 3 use cases distintos cobrindo solicitar, aprovar e cancelar — não um único serviço genérico com múltiplos métodos",
+      "passed": true,
+      "evidence": "RequestLoanUseCase, ApproveLoanUseCase e CancelLoanUseCase listados como interfaces separadas em 'application/port/in/'."
+    },
+    {
+      "text": "LoanEntityMapper.java existe em infrastructure/persistence/ com métodos de conversão em ambas as direções (toJpaEntity e toDomain)",
+      "passed": true,
+      "evidence": "LoanMapper.java listado em 'infrastructure/persistence/mapper/' — conversão em ambas as direções mencionada."
+    },
+    {
+      "text": "O controller injeta UseCase via construtor e não referencia Repository diretamente",
+      "passed": true,
+      "evidence": "'LoanController depends only on inbound-port interfaces, never on use-case implementations directly' — conforme descrito."
+    }
+  ]
+}

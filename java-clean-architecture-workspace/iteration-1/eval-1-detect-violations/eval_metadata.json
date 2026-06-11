@@ -1,0 +1,6 @@
+{
+  "eval_id": 2,
+  "eval_name": "detect-violations",
+  "prompt": "Temos um microsserviço `br.com.itau.payment` onde o `PaymentController` injeta `PaymentRepository` diretamente, e a classe `Payment` tem `@Entity @Table(name='payment')` no pacote `domain/`. Quais são as violações de Clean Architecture e como corrigi-las?",
+  "assertions": []
+}
